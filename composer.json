@@ -1,0 +1,7 @@
+{
+    "name":"tbf/tbf-component",
+    "type": "library",
+    "autoload":{
+        "psr-0":{"Tbf\\Component":"src/"}
+    }
+}
