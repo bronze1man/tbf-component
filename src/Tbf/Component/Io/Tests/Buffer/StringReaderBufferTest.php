@@ -26,7 +26,6 @@ class StringReaderBufferTest extends TestCase{
         $this->assertEquals('a',$reader->readByte());
         $this->assertEquals('b',$reader->readByte());
         $this->assertEquals(null,$reader->readByte());
-        
     }
     function testReadUtil(){
         $origin_reader = $this->mockStringReader(array(

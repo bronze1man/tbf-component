@@ -1,19 +1,19 @@
 <?php
-namespace Tbf\Component\Excel;
-use Tbf\Component\Io\MapWriterInterface;
+namespace Tbf\Component\Excel\Importer;
 use Tbf\Component\Io\StringReaderInterface;
 use Tbf\Component\Io\Io;
 use Tbf\Component\Excel\Exception\ImportException;
+use Tbf\Component\Io\ArrayWriterInterface;
 
 /**
  * CsvImporter read csv from $src save output to $dest
  * just read csv to two level array not understand header...
  */
-class CsvImporter{
+class CsvImporter implements ArrayImporterInterface{
     protected $src;
     protected $dest;
     protected $string_buffer;
-    function import(StringReaderInterface $src,MapWriterInterface $dest){
+    function import(StringReaderInterface $src,ArrayWriterInterface $dest){
         $this->src = Io::NewStringReaderBuffer($src);
         $this->dest = $dest;
         while (true){

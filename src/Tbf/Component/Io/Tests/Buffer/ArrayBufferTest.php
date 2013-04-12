@@ -1,36 +1,36 @@
 <?php
 namespace Tbf\Component\Io\Tests\Buffer;
-use Tbf\Component\Io\Buffer\MapBuffer;
+use Tbf\Component\Io\Buffer\ArrayBuffer;
 use Tbf\Component\Io\Tests\TestCase;
 
-class MapBufferTest extends TestCase{
-    function testMapBuffer(){
-        $map = new MapBuffer();
-        $map->writeOne(array(
+class ArrayBufferTest extends TestCase{
+    function testArrayBuffer(){
+        $buffer = new ArrayBuffer();
+        $buffer->writeOne(array(
             'a'=>1,
             'b'=>2
         ));
-        $map->writeOne(array(
+        $buffer->writeOne(array(
             'a'=>2,
             'b'=>3
         ));
         
-        $data = $map->readOne();
+        $data = $buffer->readOne();
         $this->assertEquals(array(
             'a'=>1,
             'b'=>2
         ),$data);
         
-        $data = $map->readOne();
+        $data = $buffer->readOne();
         $this->assertEquals(array(
             'a'=>2,
             'b'=>3
         ),$data);
         
-        $data = $map->readOne();
+        $data = $buffer->readOne();
         $this->assertEquals(null,$data);
         
-        $data = $map->readOne();
+        $data = $buffer->readOne();
         $this->assertEquals(null,$data);
     }
 }

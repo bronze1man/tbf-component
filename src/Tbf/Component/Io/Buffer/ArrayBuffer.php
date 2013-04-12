@@ -1,8 +1,8 @@
 <?php
 namespace Tbf\Component\Io\Buffer;
-use Tbf\Component\Io\MapReaderInterface;
-use Tbf\Component\Io\MapWriterInterface;
-class MapBuffer implements MapReaderInterface,MapWriterInterface{
+use Tbf\Component\Io\ArrayReaderInterface;
+use Tbf\Component\Io\ArrayWriterInterface;
+class ArrayBuffer implements ArrayReaderInterface,ArrayWriterInterface{
     protected $buffer = array();
     function __construct($data = array()){
         foreach($data as $row){
@@ -15,7 +15,7 @@ class MapBuffer implements MapReaderInterface,MapWriterInterface{
         }
         return array_shift($this->buffer);
     }
-    function writeOne(array $map){
-        $this->buffer[] = $map;
+    function writeOne(array $array){
+        $this->buffer[] = $array;
     }
 }

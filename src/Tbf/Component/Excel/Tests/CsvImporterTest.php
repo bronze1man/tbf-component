@@ -2,9 +2,10 @@
 namespace Tbf\Component\Excel\Tests;
 use Tbf\Component\Io\Buffer\StringBuffer;
 use Tbf\Component\Io\Buffer\MapBuffer;
-use Tbf\Component\Excel\CsvImporter;
+use Tbf\Component\Excel\Importer\CsvImporter;
 use Tbf\Component\Excel\Tests\Fixture\CsvFixture;
 use Tbf\Component\Io\Io;
+use Tbf\Component\Io\Buffer\ArrayBuffer;
 class CsvImporterTest extends TestCase{
     function testParseOneLine(){
         $importer = new CsvImporter();
@@ -30,7 +31,7 @@ EOF;
      */
     function test1($fixture){
         $src = new StringBuffer($fixture['string']);
-        $dest = new MapBuffer();
+        $dest = new ArrayBuffer();
         $importer = new CsvImporter();
         $importer->import($src,$dest);
         $expect = $fixture['object'];

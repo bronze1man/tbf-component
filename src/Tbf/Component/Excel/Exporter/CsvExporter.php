@@ -1,16 +1,16 @@
 <?php
-namespace Tbf\Component\Excel;
-use Tbf\Component\Io\MapReaderInterface;
+namespace Tbf\Component\Excel\Exporter;
 use Tbf\Component\Io\StringWriterInterface;
+use Tbf\Component\Io\ArrayReaderInterface;
 
 /**
  * CsvExporter read data from $src save output to $dest
  */
-class CsvExporter{
+class CsvExporter implements ArrayExporterInterface{
     protected $src;
     protected $dest;
     protected $is_first_line;
-    function export(MapReaderInterface $src,StringWriterInterface $dest){
+    function export(ArrayReaderInterface $src,StringWriterInterface $dest){
         $this->src = $src;
         $this->dest = $dest;
         $this->is_first_line = true;
