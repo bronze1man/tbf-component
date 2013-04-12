@@ -2,7 +2,7 @@
 namespace Tbf\Component\Excel\Tests\Fixture;
 class CsvFixture{
     function getData(){
-        return array($this->getD1());
+        return array(array($this->getD1()));
     }
 
     function getD1(){
@@ -12,14 +12,9 @@ class CsvFixture{
 "2","3"
 EOF;
         $obj = array(
-            array(
-                'a'=>1,
-                'b'=>2
-            ),
-            array(
-                'a'=>2,
-                'b'=>3
-            )
+            array('a','b'),
+            array('1','2'),
+            array('2','3'),
         );
         return array(
             'string'=>$csv,

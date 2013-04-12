@@ -9,17 +9,11 @@ use Tbf\Component\Io\StringWriterInterface;
 class CsvExporter{
     protected $src;
     protected $dest;
+    protected $is_first_line;
     function export(MapReaderInterface $src,StringWriterInterface $dest){
         $this->src = $src;
         $this->dest = $dest;
-        //title
-        $row = $this->src->readOne();
-        if ($row === null){
-            return;
-        }
-        $title_row = array_keys($row);
-        $this->exportRow($title_row);
-        $this->exportRow($row);
+        $this->is_first_line = true;
         while(true){
             $row = $this->src->readOne();
             if ($row === null){
@@ -30,11 +24,20 @@ class CsvExporter{
     }
     function exportRow(array $row){
         $output = '';
-        foreach($row as $key=>$value){
-            $output .= '"'.str_replace('"', '""' ,$value).'",';
+        //最后的换行问题
+        if (!$this->is_first_line){
+            $output .= "\n";
         }
-        $output .= "\n";
-   
+        $this->is_first_line = false;
+        //最后的,号问题
+        $is_first = true;
+        foreach($row as $key=>$value){
+            if (!$is_first){
+                $output .= ',';
+            }
+            $is_first = false;
+            $output .= '"'.str_replace('"', '""' ,$value).'"';
+        }
         $this->dest->write($output);
     }
 }

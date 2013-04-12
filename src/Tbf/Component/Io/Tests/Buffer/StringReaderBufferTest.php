@@ -6,7 +6,6 @@ use Tbf\Component\Io\Buffer\MapBuffer;
 use Tbf\Component\Io\Buffer\StringReaderBuffer;
 
 class StringReaderBufferTest extends TestCase{
-    
     function testRead(){
         $origin_reader = $this->mockStringReader(array(
             'hehe',null
@@ -18,7 +17,17 @@ class StringReaderBufferTest extends TestCase{
         $ret = $reader->read();
         $this->assertEquals(null,$ret);
     }
-    
+    function testGetByte(){
+        $reader = $this->mockStringReader(array(
+            'ha','b',null
+        )); 
+        $reader = new StringReaderBuffer($reader);
+        $this->assertEquals('h',$reader->readByte());
+        $this->assertEquals('a',$reader->readByte());
+        $this->assertEquals('b',$reader->readByte());
+        $this->assertEquals(null,$reader->readByte());
+        
+    }
     function testReadUtil(){
         $origin_reader = $this->mockStringReader(array(
             '1',"\n",'2',null

@@ -44,4 +44,23 @@ class StringReaderBuffer implements StringReaderInterface{
             }
         }
     }
+    function readByte(){
+        if ($this->hasReadAll){
+            return null;
+        }
+        if (!empty($this->buffer)){
+            $toReturn = substr($this->buffer,0,1);
+            $this->buffer = substr($this->buffer,1);
+            return $toReturn;
+        }
+        $this_read = $this->origin->read();
+        if ($this_read === null){
+            $this->hasReadAll = true;
+            return null;
+        }
+        $this->buffer .= $this_read;
+        $toReturn = substr($this->buffer,0,1);
+        $this->buffer = substr($this->buffer,1);
+        return $toReturn;
+    }
 }

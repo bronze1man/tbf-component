@@ -4,24 +4,31 @@ use Tbf\Component\Io\Buffer\StringBuffer;
 use Tbf\Component\Io\Buffer\MapBuffer;
 use Tbf\Component\Excel\CsvImporter;
 use Tbf\Component\Excel\Tests\Fixture\CsvFixture;
+use Tbf\Component\Io\Io;
 class CsvImporterTest extends TestCase{
     function testParseOneLine(){
         $importer = new CsvImporter();
         
-        $line = '"1","2"';
+        $line = Io::NewStringReaderBuffer(new StringBuffer('"1","2"'));
         $row = $importer->parseOneLine($line);
         $this->assertEquals(array('1','2'),$row);
         
-        $line = '"1,1","2"';
+        $line = Io::NewStringReaderBuffer(new StringBuffer('"1,1","2"'));
         $row = $importer->parseOneLine($line);
         $this->assertEquals(array('1,1','2'),$row);
         
+        $line = <<<'EOF'
+"1","c,a","f""g","x
+,",5,hehe,,
+EOF;
+        $line = Io::NewStringReaderBuffer(new StringBuffer($line));
+        $row = $importer->parseOneLine($line);
+        $this->assertEquals(array('1','c,a','f"g',"x\n,",'5','hehe','',''),$row);
     }
     /**
      * @dataProvider getData
      */
     function test1($fixture){
-        $src = $fixture['src'];
         $src = new StringBuffer($fixture['string']);
         $dest = new MapBuffer();
         $importer = new CsvImporter();
@@ -29,12 +36,23 @@ class CsvImporterTest extends TestCase{
         $expect = $fixture['object'];
         foreach($expect as $expect_row){
             $read_obj = $dest->readOne();
-            var_dump($read_obj);
             $this->assertEquals($expect_row,$read_obj);
         }
     }
     function getData(){
-        $fixture = new CsvFixture($this);
-        return $fixture->getData();
+        $fixture = new CsvFixture();
+        $data = $fixture->getData();
+        $data[] = array(array(
+            'string'=><<<'EOF'
+a,b,c
+"a","b",c
+EOF
+,
+            'object'=>array(
+                array('a','b','c'),
+                array('a','b','c')
+        )
+        ));
+        return $data;
     }
 }
