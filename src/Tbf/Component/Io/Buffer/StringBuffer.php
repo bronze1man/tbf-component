@@ -8,6 +8,9 @@ use Tbf\Component\Io\StringWriterInterface;
  */
 class StringBuffer implements StringReaderInterface,StringWriterInterface{
     protected $buffer = '';
+    function __construct($init_string = ''){
+        $this->write($init_string);
+    }
     function write($string){
         $this->buffer .=$string;
     }

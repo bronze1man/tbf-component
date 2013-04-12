@@ -9,11 +9,9 @@ use Tbf\Component\Io\StringWriterInterface;
 class CsvExporter{
     protected $src;
     protected $dest;
-    function __construct(MapReaderInterface $src,StringWriterInterface $dest){
+    function export(MapReaderInterface $src,StringWriterInterface $dest){
         $this->src = $src;
         $this->dest = $dest;
-    }
-    function export(){
         //title
         $row = $this->src->readOne();
         if ($row === null){

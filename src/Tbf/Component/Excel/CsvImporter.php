@@ -2,6 +2,7 @@
 namespace Tbf\Component\Excel;
 use Tbf\Component\Io\MapWriterInterface;
 use Tbf\Component\Io\StringReaderInterface;
+use Tbf\Component\Io\Io;
 
 /**
  * CsvImporter read csv from $src save output to $dest
@@ -9,33 +10,35 @@ use Tbf\Component\Io\StringReaderInterface;
 class CsvImporter{
     protected $src;
     protected $dest;
-    function __construct(StringReaderInterface $src,MapWriterInterface $dest){
-        $this->src = $src;
+    protected $string_buffer;
+    function import(StringReaderInterface $src,MapWriterInterface $dest){
+        $this->src = Io::NewStringReaderBuffer($src);
         $this->dest = $dest;
-    }
-    function import(){
         //title
-        $row = $this->src->readOne();
-        if ($row === null){
-            return;
-        }
-        $title_row = array_keys($row);
-        $this->exportRow($title_row);
-        $this->exportRow($row);
-        while(true){
-            $row = $this->src->readOne();
-            if ($row === null){
+        $this->string_buffer = '';
+        $this_line = $this->src->readUtil("\n");
+        $title = $this->parseOneLine($this_line);
+        while (true){
+            $this_line = $this->src->readUtil("\n");
+            if ($this_line===null){
                 return;
-            }
-            $this->exportRow($row);
+            }        
+            $row = $this->parseOneLine($this_line);
+            $row = array_combine($title, $row);
+            $this->dest->writeOne($row);
         }
     }
-    function exportRow(array $row){
-        $output = '';
+    
+    function parseOneLine($line){
+        $row = explode(',',$line);
         foreach($row as $key=>$value){
-            $output .= '"'.str_replace('"', '""' ,$value).'"';
+            if (substr($value,0,1)==='"' &&
+                substr($value,-1)==='"'
+            ){
+                $value = substr($value,1,-1);
+                $row[$key] = str_replace('""', '"', $value);
+            }
         }
-        $output .= "\n";
-        $this->dest->write($output);
-    }
+        return $row;
+    } 
 }

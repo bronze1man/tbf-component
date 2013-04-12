@@ -29,12 +29,4 @@ class ExcelTest extends TestCase{
             ;
         $importer->import();
     }
-    function testSqlImport(){
-    }
-
-    function CsvWriter(){
-
-    }
-    function CsvReader(){
-    }
 }
