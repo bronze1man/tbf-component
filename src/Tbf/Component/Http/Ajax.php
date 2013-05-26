@@ -1,7 +1,6 @@
 <?php
 namespace Tbf\Component\Http;
 use \Guzzle\Http\Exception\BadResponseException;
-use Tbf\Component\Http\Driver\ClientDriverInterface;
 use Guzzle\Http\ClientInterface;
 /**
  * 发送ajax请求,模拟浏览器上的jquery接口
@@ -60,8 +59,6 @@ class Ajax{
      * 根据需要确定是否抛出异常
      * */
     function request($ajax_req){
-        $this->runTimes+=1;
-        $this->startTimer();
         $default = array(
             'data'=>array(), //数据
             'method'=>'GET', //http方法
@@ -81,7 +78,6 @@ class Ajax{
             }
         }
         $data = $this->rawRequest();
-        $this->endTimer();
         return $data;
     }
     /**
@@ -207,44 +203,9 @@ class Ajax{
         );
         $this->client->addSubscriber($this->cookie_plugin);
     }
-    protected $time_list = array();
-    protected $start_time = 0.0;
-    function startTimer(){
-        $this->start_time = microtime(true);
+    function getCookie(){
+        return $this->cookie_plugin->getCookieJar();
     }
-    function endTimer(){
-        $this->time_list[] = microtime(true)-$this->start_time;
-        $this->start_time = 0.0;
-    }
-    function getFastTime(){
-        return min($this->time_list);
-    }
-    function getSlowTime(){
-        return max($this->time_list);
-    }
-    function getAvgTime(){
-        $total = $this->getTotalTime();
-        return $total/count($this->time_list);
-    }
-    function getTotalTime(){
-        $output = 0.0;
-        foreach($this->time_list as $v1){
-            $output+=$v1;
-        }
-        return $output;
-    }
-    /**
-     * 统计信息
-     * */
-    function showStatis(){
-        $str = '运行过的ajax的次数:'.$this->runTimes."\n";
-        $str .= '平均时间:'.$this->getAvgTime()."\n";
-        $str .= '总时间:'.$this->getTotalTime()."\n";
-        $str .= '最快时间:'.$this->getFastTime()."\n";
-        $str .= '最慢时间:'.$this->getSlowTime()."\n";
-        echo $str;
-    }
-
     function showDebug(){
         $this->new_request = (string)$this->request;
         if ($this->origin_request!=$this->new_request){
