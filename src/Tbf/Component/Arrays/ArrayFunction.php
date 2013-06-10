@@ -1,5 +1,5 @@
 <?php
-namespace Tbf\Func;
+namespace Tbf\Component\Arrays;
 
 final class ArrayFunction {
     final private function __construct(){
