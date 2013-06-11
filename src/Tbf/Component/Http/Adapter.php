@@ -24,7 +24,6 @@ class Adapter
         }
         //url,method
         $symfony_request = SymfonyRequest::create($url, $method);
-
         //get data
         $query = $guzzle_request->getQuery()->getAll();
         if ($guzzle_request instanceof GuzzleEntityEnclosingRequest) {
@@ -33,6 +32,7 @@ class Adapter
         } else {
             $post = array();
         }
+        $server = $symfony_request->server->all();
         //content问题
         $symfony_request->initialize(
             $query,
@@ -40,12 +40,18 @@ class Adapter
             $symfony_request->attributes->all(),
             $symfony_request->cookies->all(),
             $symfony_request->files->all(),
-            $symfony_request->server->all(),
+            $server,
             $content
         );
         //header
-        $header_map = $guzzle_request->getHeaders(false)->getAll();
-        $symfony_request->headers->replace($header_map);
+
+        $header_map = $guzzle_request->getHeaders()->getAll();
+        $output_header_map = array();
+        foreach($header_map as $header){
+            $output_header_map[$header->getName()] = (string)$header;
+        }
+        $symfony_request->headers->replace($output_header_map);
+
         return $symfony_request;
     }
 
